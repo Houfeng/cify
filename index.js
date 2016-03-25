@@ -1,12 +1,15 @@
 (function() {
 
-  function createInstance(Fn, args) {
-    var args_str = [].slice.call(args).map(function(arg, i) {
-      return 'args[' + i + ']';
-    });
-    var instance = eval('new Fn(' + args_str.join(',') + ')');
-    return instance;
-  };
+  var createInstance = (function() {
+    var fnBody = ["switch(args.length){"];
+    for (var i = 20; i > 0; i--) {
+      var fnArgs = [];
+      for (var j = 0; j < i; j++) fnArgs.push("args[" + j + "]");
+      fnBody.push("case " + i + ":return new Fn(" + fnArgs.join(',') + ");");
+    }
+    fnBody.push("case 0:default:return new Fn();}");
+    return new Function("Fn", "args", fnBody.join(''));
+  })();
 
   function getPropertyNames(obj) {
     var nameList = Object.getOwnPropertyNames(obj);
