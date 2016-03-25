@@ -8,6 +8,14 @@ function createInstance(Fn, args) {
   return instance;
 };
 
+function getPropertyNames(obj) {
+  var nameList = Object.getOwnPropertyNames(obj);
+  if (obj.__proto__) {
+    nameList.push.apply(nameList, getPropertyNames(obj.__proto__));
+  }
+  return nameList;
+};
+
 function createSuper(_self, proto) {
   var _super = function() {
     if (proto.constructor) {
@@ -15,20 +23,24 @@ function createSuper(_self, proto) {
     }
     return proto;
   };
-  for (var name in _self) {
+  delete _super.name;
+  var nameList = getPropertyNames(proto);
+  var nameLength = nameList.length;
+  for (var i = 0; i < nameLength; i++) {
+    var name = nameList[i];
     if (name == "_super" ||
       name == "_extends" ||
       name == "_static" ||
-      name == "constructor" ||
-      proto[name] == null) {
+      name == "constructor") {
       continue;
     }
     if (typeof proto[name] === 'function') {
-      _super[name] = proto[name].bind(_self);
+      _super[name] = _super[name] || proto[name].bind(_self);
     } else {
-      _super[name] = proto[name];
+      _super[name] = _super[name] || proto[name];
     }
   }
+  _super.__proto__ = {};
   return _super;
 };
 
