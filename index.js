@@ -25,21 +25,19 @@ function createSuper(_self, proto) {
   };
   delete _super.name;
   var nameList = getPropertyNames(proto);
-  var nameLength = nameList.length;
-  for (var i = 0; i < nameLength; i++) {
-    var name = nameList[i];
+  nameList.forEach(function(name) {
     if (name == "_super" ||
       name == "_extends" ||
       name == "_static" ||
       name == "constructor") {
-      continue;
+      return;
     }
     if (typeof proto[name] === 'function') {
       _super[name] = _super[name] || proto[name].bind(_self);
     } else {
       _super[name] = _super[name] || proto[name];
     }
-  }
+  });
   _super.__proto__ = {};
   return _super;
 };
