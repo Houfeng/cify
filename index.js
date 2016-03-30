@@ -22,9 +22,8 @@
   function createSuper(_self, proto) {
     var _super = function() {
       if (proto.constructor) {
-        return createInstance(proto.constructor, arguments);
+        proto.constructor.apply(_self, arguments);
       }
-      return proto;
     };
     delete _super.name;
     var nameList = getPropertyNames(proto);
@@ -66,16 +65,17 @@
     Class.__proto__ = clsssStatic;
     function Class() {
       var instance = this;
-      if (constructor != null &&
-        constructor != Object) {
-        instance = constructor.apply(instance, arguments) || instance;
-      } else if (typeof classExtends === 'function') {
-        instance = createInstance(classExtends, arguments) || instance;
+      if (typeof classExtends === 'function') {
+        instance = createInstance(classExtends, arguments);
       }
       instance.constructor = Class;
       instance.__proto__ = Class.prototype;
       instance._extends = null;
       instance._static = Class;
+      if (constructor != null &&
+        constructor != Object) {
+        instance = constructor.apply(instance, arguments) || instance;
+      }
       return instance;
     }
     return Class;
