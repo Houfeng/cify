@@ -1,101 +1,99 @@
-(function() {
-
-  var createInstance = (function() {
-    var fnBody = ["switch(args.length){"];
+;(function () {
+  var createInstance = (function () {
+    var fnBody = ['switch(args.length){']
     for (var i = 20; i > 0; i--) {
-      var fnArgs = [];
-      for (var j = 0; j < i; j++) fnArgs.push("args[" + j + "]");
-      fnBody.push("case " + i + ":return new Fn(" + fnArgs.join(',') + ");");
+      var fnArgs = []
+      for (var j = 0; j < i; j++) fnArgs.push('args[' + j + ']')
+      fnBody.push('case ' + i + ':return new Fn(' + fnArgs.join(',') + ');')
     }
-    fnBody.push("case 0:default:return new Fn();}");
-    return new Function("Fn", "args", fnBody.join(''));
-  })();
+    fnBody.push('case 0:default:return new Fn();}')
+    return new Function('Fn', 'args', fnBody.join(''))
+  })()
 
-  function getPropertyNames(obj) {
-    var nameList = Object.getOwnPropertyNames(obj);
+  function getPropertyNames (obj) {
+    var nameList = Object.getOwnPropertyNames(obj)
     if (obj.__proto__) {
-      nameList.push.apply(nameList, getPropertyNames(obj.__proto__));
+      nameList.push.apply(nameList, getPropertyNames(obj.__proto__))
     }
-    return nameList;
-  };
+    return nameList
+  }
 
-  function createSuper(_self, proto) {
-    var _super = function() {
+  function createSuper (_self, proto) {
+    var _super = function () {
       if (proto.constructor) {
-        proto.constructor.apply(_self, arguments);
+        proto.constructor.apply(_self, arguments)
       }
-    };
-    delete _super.name;
-    var nameList = getPropertyNames(proto);
-    nameList.forEach(function(name) {
-      if (name == "_super" ||
-        name == "_extends" ||
-        name == "_static" ||
-        name == "constructor") {
-        return;
+    }
+    delete _super.name
+    var nameList = getPropertyNames(proto)
+    nameList.forEach(function (name) {
+      if (name == '_super' ||
+        name == '_extends' ||
+        name == '_static' ||
+        name == 'constructor') {
+        return
       }
       if (typeof proto[name] === 'function') {
-        _super[name] = _super[name] || proto[name].bind(_self);
+        _super[name] = _super[name] || proto[name].bind(_self)
       } else {
-        _super[name] = _super[name] || proto[name];
+        _super[name] = _super[name] || proto[name]
       }
-    });
-    _super.__proto__ = {};
-    return _super;
-  };
+    })
+    _super.__proto__ = {}
+    return _super
+  }
 
-  function defineClass(def) {
-    var classProto = ((typeof def === 'function') ? def() : def) || {};
-    var constructor = classProto.constructor;
-    var classExtends = classProto._extends;
-    var clsssStatic = classProto._static || {};
+  function defineClass (def) {
+    var classProto = ((typeof def === 'function') ? def() : def) || {}
+    var constructor = classProto.constructor
+    var classExtends = classProto._extends
+    var clsssStatic = classProto._static || {}
     if (typeof classExtends === 'function') {
-      classProto.__proto__ = classExtends.prototype;
-      clsssStatic.__proto__ = classExtends;
+      classProto.__proto__ = classExtends.prototype
+      clsssStatic.__proto__ = classExtends
     } else if (classExtends) {
-      classProto.__proto__ = classExtends;
+      classProto.__proto__ = classExtends
     } else {
-      classProto.__proto__ = {};
+      classProto.__proto__ = {}
     }
-    classProto.__defineGetter__('_super', function() {
-      this.__super__ = this.__super__ || createSuper(this, classProto.__proto__);
-      return this.__super__;
-    });
-    Class.prototype = classProto;
-    Class.__proto__ = clsssStatic;
-    function Class() {
-      var instance = this;
+    classProto.__defineGetter__('_super', function () {
+      this.__super__ = this.__super__ || createSuper(this, classProto.__proto__)
+      return this.__super__
+    })
+    Class.prototype = classProto
+    Class.__proto__ = clsssStatic
+    function Class () {
+      var instance = this
       if (typeof classExtends === 'function') {
-        instance = createInstance(classExtends, arguments);
+        instance = createInstance(classExtends, arguments)
       }
-      instance.constructor = Class;
-      instance.__proto__ = Class.prototype;
-      instance._extends = null;
-      instance._static = Class;
-      if (constructor != null &&
-        constructor != Object) {
-        instance = constructor.apply(instance, arguments) || instance;
+      instance.constructor = Class
+      instance.__proto__ = Class.prototype
+      instance._extends = null
+      instance._static = Class
+      if (instance.constructor != null &&
+        instance.constructor != Object) {
+        instance = instance.constructor.apply(instance, arguments) || instance
       }
-      return instance;
+      return instance
     }
-    return Class;
-  };
+    return Class
+  }
 
-  defineClass.prototype.__proto__ = Function.prototype;
-  defineClass.Class = defineClass;
+  defineClass.prototype.__proto__ = Function.prototype
+  defineClass.Class = defineClass
 
   if (typeof module != 'undefined') {
-    module.exports = defineClass;
+    module.exports = defineClass
   }
 
   if (typeof define == 'function' && define.amd) {
-    define('cify', [], function() {
-      return defineClass;
-    });
+    define('cify', [], function () {
+      return defineClass
+    })
   }
 
   if (typeof window != 'undefined') {
-    window.cify = window.Class = defineClass;
+    window.cify = window.Class = defineClass
   }
-
-})();
+})()
