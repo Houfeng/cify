@@ -1,27 +1,27 @@
-var Class = require("../");
+var Class = require('../')
 
 var A = new Class({
   _extends: Date,
-  getName: function() {
-    return "a";
+  getName: function () {
+    return 'a'
   }
-});
+})
 
 var B = new Class({
   _extends: A,
-  getName: function() {
-    return "b" + B.test();
+  getName: function () {
+    return 'b' + B.test()
   },
   _static: {
-    test: function() {
-      return "B";
+    test: function () {
+      return 'B'
     }
   }
-});
+})
 
-var a = new A();
-var b = new B();
+var a = new A()
+var b = new B()
 
-console.log(a._super.name);
+console.log(a._super.name)
 
-console.log(0);
+console.log(0)

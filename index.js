@@ -45,7 +45,6 @@
 
   function defineClass (def) {
     var classProto = ((typeof def === 'function') ? def() : def) || {}
-    var constructor = classProto.constructor
     var classExtends = classProto._extends
     var clsssStatic = classProto._static || {}
     if (typeof classExtends === 'function') {
@@ -71,9 +70,10 @@
       instance.__proto__ = Class.prototype
       instance._extends = null
       instance._static = Class
-      if (instance.constructor != null &&
-        instance.constructor != Object) {
-        instance = instance.constructor.apply(instance, arguments) || instance
+      var constructor = instance.__proto__.constructor
+      if (constructor != null &&
+        constructor != Object) {
+        instance = constructor.apply(instance, arguments) || instance
       }
       return instance
     }
