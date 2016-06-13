@@ -1,4 +1,4 @@
-;(function () {
+; (function () {
   var createInstance = (function () {
     var fnBody = ['switch(args.length){']
     for (var i = 20; i > 0; i--) {
@@ -10,7 +10,7 @@
     return new Function('Fn', 'args', fnBody.join(''))
   })()
 
-  function getPropertyNames (obj) {
+  function getPropertyNames(obj) {
     var nameList = Object.getOwnPropertyNames(obj)
     if (obj.__proto__) {
       nameList.push.apply(nameList, getPropertyNames(obj.__proto__))
@@ -18,7 +18,17 @@
     return nameList
   }
 
-  function createSuper (_self, proto) {
+  function isChildClass(_child, _super) {
+    if (_child.__proto__ == _super.prototype) {
+      return true
+    } else if (_child.prototype) {
+      return isChildClass(_child.prototype, _super)
+    } else {
+      return false
+    }
+  }
+
+  function createSuper(_self, proto) {
     var _super = function () {
       if (proto.constructor) {
         proto.constructor.apply(_self, arguments)
@@ -43,7 +53,7 @@
     return _super
   }
 
-  function defineClass (def) {
+  function defineClass(def) {
     var classProto = ((typeof def === 'function') ? def() : def) || {}
     var classExtends = classProto._extends
     var clsssStatic = classProto._static || {}
@@ -61,7 +71,7 @@
     })
     Class.prototype = classProto
     Class.__proto__ = clsssStatic
-    function Class () {
+    function Class() {
       var instance = this
       if (typeof classExtends === 'function') {
         instance = createInstance(classExtends, arguments)
@@ -77,6 +87,12 @@
       }
       return instance
     }
+    Class.extendsOf = function (_super) {
+      return isChildClass(this, _super)
+    };
+    Class.superOf = function (_child) {
+      return isChildClass(_child, this)
+    };
     return Class
   }
 
