@@ -83,7 +83,7 @@
       if (constructor != null &&
         constructor != Object) {
         var rs = constructor.apply(instance, arguments)
-        instance = classProto.hasOwnProperty('constructor') ? rs : instance
+        instance = rs && classProto.hasOwnProperty('constructor') ? rs : instance
       }
       instance.__proto__ = Class.prototype
       delete instance._extends

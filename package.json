@@ -1,6 +1,6 @@
 {
   "name": "cify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个面向对象辅助模块",
   "main": "index.js",
   "scripts": {
