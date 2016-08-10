@@ -19,9 +19,9 @@ var B = new Class({
   }
 })
 
-var a = new A()
-var b = new B()
+var a = new A('2016-9-20')
+var b = new B('2016-9-21')
 
-console.log(a._super.name)
+console.log(b.getName())
 
 console.log(0)

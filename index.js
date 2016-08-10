@@ -77,14 +77,16 @@
         instance = createInstance(classExtends, arguments)
       }
       instance.constructor = Class
+      instance._static = instance.Class = Class
       instance.__proto__ = Class.prototype
-      instance._extends = null
-      instance._static = Class
       var constructor = instance.__proto__.constructor
       if (constructor != null &&
         constructor != Object) {
-        instance = constructor.apply(instance, arguments) || instance
+        var rs = constructor.apply(instance, arguments)
+        instance = classProto.hasOwnProperty('constructor') ? rs : instance
       }
+      instance.__proto__ = Class.prototype
+      delete instance._extends
       return instance
     }
     Class.extendsOf = function (_super) {
