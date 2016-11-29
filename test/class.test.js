@@ -1,27 +1,36 @@
+'use strict';
+
 var Class = require('../')
 
 var A = new Class({
-  _extends: Date,
+  $extends: Array,
+  constructor: function () {
+    this.$super.apply(this, arguments);
+  },
   getName: function () {
-    return 'a'
+    return 'A';
   }
-})
+});
 
 var B = new Class({
-  _extends: A,
+  $extends: A,
   getName: function () {
-    return 'b' + B.test()
+    return this.$super.getName();
+    //return 'B:' + B.test();
   },
-  _static: {
+  $static: {
     test: function () {
-      return 'B'
+      return 'B';
     }
   }
-})
+});
 
-var a = new A('2016-9-20')
-var b = new B('2016-9-21')
+class C extends Array {
 
-console.log(b.getName())
+}
 
-console.log(0)
+var a = new A(5, 4);
+var b = new B(3);
+var c = new C(6);
+
+console.log(a.getName());
