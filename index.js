@@ -4,6 +4,7 @@ const RESERVED = ['$extends', '$name', '$class', '$super'];
 
 function Class(options) {
   //处理 options
+  options = options || utils.create(null);
   options.$name = options.$name || 'Class';
   options.$extends = options.$extends || Class;
   options.$static = options.$static || utils.create(null);
