@@ -1,6 +1,6 @@
 const utils = require('ntils');
 
-const RESERVED = ['$extends', '$name', '$class', '$super'];
+const RESERVED = ['$extends', '$name', '$class', '$super', '$super_result', '$super_called'];
 
 function Class(options) {
   //处理 options
@@ -16,11 +16,14 @@ function Class(options) {
     //处理 super
     if (!this.$super) {
       utils.defineFreezeProp(this, '$super', function () {
+        if (this.$super_called) return this.$super_result;
+        this.$super_called = true;
         if (utils.isFunction(options.$extends)) {
-          return this.__proto__.__proto__ = options.$extends.apply(this, arguments);
+          this.$super_result = this.__proto__.__proto__ = options.$extends.apply(this, arguments);
         } else {
-          return options.$extends;
+          this.$super_result = options.$extends;
         }
+        return this.$super_result;
       });
       utils.each(superPrototype, function (name, value) {
         if (utils.isFunction(value)) {
@@ -48,6 +51,7 @@ function Class(options) {
     utils.copy(Class, NewClass);
   }
   utils.defineFreezeProp(NewClass, 'name', options.$name);
+  utils.defineFreezeProp(NewClass, '$super', options.$extends);
   //--
   return NewClass;
 }
