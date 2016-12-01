@@ -18,8 +18,6 @@ function Class(options) {
       utils.defineFreezeProp(this, '$super', function () {
         if (utils.isFunction(options.$extends)) {
           return this.__proto__.__proto__ = options.$extends.apply(this, arguments);
-        } else if (options.$extends.constructor) {
-          return this.__proto__.__proto__ = options.$extends.constructor.apply(this, arguments);
         } else {
           return options.$extends;
         }
