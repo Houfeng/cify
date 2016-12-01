@@ -40,7 +40,7 @@ function Class(options) {
   };
   //处理 prototype
   NewClass.prototype.__proto__ = superPrototype;
-  utils.copy(options, NewClass.prototype, RESERVED);
+  utils.copy(options, NewClass.prototype, RESERVED, 'Name `{name}` is reserved');
   utils.defineFreezeProp(NewClass.prototype, '$class', NewClass);
   //处理静态成员
   utils.copy(options.$static, NewClass);
