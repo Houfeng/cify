@@ -14,6 +14,6 @@
   "author": "Houfeng",
   "license": "MIT",
   "dependencies": {
-    "ntils": "^1.2.4"
+    "ntils": "^1.2.5"
   }
 }
