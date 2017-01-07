@@ -1,7 +1,5 @@
 const utils = require('ntils');
 
-const RESERVED = ['$extends', '$name', '$class', '$super', '$super_result', '$super_called'];
-
 function Class(options) {
   //处理 options
   options = options || utils.create(null);
@@ -16,14 +14,14 @@ function Class(options) {
     //处理 super
     if (!this.$super) {
       utils.defineFreezeProp(this, '$super', function () {
-        if (this.$super_called) return this.$super_result;
-        this.$super_called = true;
+        if (this._super_called_) return this._super_ret_;
+        this._super_called_ = true;
         if (utils.isFunction(options.$extends)) {
-          this.$super_result = this.__proto__.__proto__ = options.$extends.apply(this, arguments);
+          this._super_ret_ = this.__proto__.__proto__ = options.$extends.apply(this, arguments);
         } else {
-          this.$super_result = options.$extends;
+          this._super_ret_ = options.$extends;
         }
-        return this.$super_result;
+        return this._super_ret_;
       });
       for (var name in superPrototype) {
         var value = superPrototype[name];
@@ -45,7 +43,7 @@ function Class(options) {
   };
   //处理 prototype
   NewClass.prototype.__proto__ = superPrototype;
-  utils.copy(options, NewClass.prototype, RESERVED);
+  utils.copy(options, NewClass.prototype);
   utils.defineFreezeProp(NewClass.prototype, '$class', NewClass);
   //处理静态成员
   utils.copy(options.$static, NewClass);
