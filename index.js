@@ -1,16 +1,16 @@
 const utils = require('ntils');
 
-function Class(options) {
+function ClassFactory(options) {
   //处理 options
   options = options || utils.create(null);
   options.$name = options.$name || 'Class';
-  options.$extends = options.$extends || Class;
+  options.$extends = options.$extends || ClassFactory;
   options.$static = options.$static || utils.create(null);
   //处理父类 prototype
   var superPrototype = utils.isFunction(options.$extends) ?
     options.$extends.prototype : options.$extends;
   //定义新类
-  var NewClass = function () {
+  var Class = function () {
     //处理 super
     if (!this.$super) {
       utils.defineFreezeProp(this, '$super', function () {
@@ -42,28 +42,27 @@ function Class(options) {
     }
   };
   //处理 prototype
-  NewClass.prototype.__proto__ = superPrototype;
-  utils.copy(options, NewClass.prototype);
-  utils.defineFreezeProp(NewClass.prototype, '$class', NewClass);
+  Class.prototype.__proto__ = superPrototype;
+  utils.copy(options, Class.prototype);
+  utils.defineFreezeProp(Class.prototype, '$class', Class);
   //处理静态成员
-  utils.copy(options.$static, NewClass);
+  utils.copy(options.$static, Class);
   if (utils.isFunction(options.$extends)) {
-    NewClass.__proto__ = options.$extends;
+    Class.__proto__ = options.$extends;
   }
   if (!options.$extends.$extend) {
-    utils.copy(Class, NewClass);
+    utils.copy(ClassFactory, Class);
   }
-  utils.defineFreezeProp(NewClass, 'name', options.$name);
-  utils.defineFreezeProp(NewClass, '$super', options.$extends);
+  utils.defineFreezeProp(Class, '$super', options.$extends);
   //--
-  return NewClass;
+  return Class;
 }
 
 //定义扩展方法
-Class.$extend = function (options) {
+ClassFactory.$extend = function (options) {
   options.$extends = this;
-  return new Class(options);
+  return new ClassFactory(options);
 };
 
-Class.Class = Class;
-module.exports = Class;
+ClassFactory.Class = ClassFactory;
+module.exports = ClassFactory;
