@@ -17,9 +17,9 @@ function ClassFactory(options) {
         if (this._super_called_) return this._super_ret_;
         this._super_called_ = true;
         if (utils.isFunction(options.$extends)) {
-          var proto = utils.getPropertyOf(this);
+          var proto = utils.getPrototypeOf(this);
           this._super_ret_ = options.$extends.apply(this, arguments);
-          utils.setPropertyOf(proto, this._super_ret_);
+          utils.setPrototypeOf(proto, this._super_ret_);
         } else {
           this._super_ret_ = options.$extends;
         }
@@ -50,7 +50,7 @@ function ClassFactory(options) {
   //处理静态成员
   utils.copy(options.$static, Class);
   if (utils.isFunction(options.$extends)) {
-    utils.setPropertyOf(Class, options.$extends);
+    utils.setPrototypeOf(Class, options.$extends);
   }
   if (!options.$extends.$extend) {
     utils.copy(ClassFactory, Class);
