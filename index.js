@@ -17,7 +17,9 @@ function ClassFactory(options) {
         if (this._super_called_) return this._super_ret_;
         this._super_called_ = true;
         if (utils.isFunction(options.$extends)) {
-          this._super_ret_ = this.__proto__.__proto__ = options.$extends.apply(this, arguments);
+          var proto = utils.getPropertyOf(this);
+          this._super_ret_ = options.$extends.apply(this, arguments);
+          utils.setPropertyOf(proto, this._super_ret_);
         } else {
           this._super_ret_ = options.$extends;
         }
@@ -42,13 +44,13 @@ function ClassFactory(options) {
     }
   };
   //处理 prototype
-  Class.prototype.__proto__ = superPrototype;
+  Class.prototype = utils.create(superPrototype);
   utils.copy(options, Class.prototype);
   utils.defineFreezeProp(Class.prototype, '$class', Class);
   //处理静态成员
   utils.copy(options.$static, Class);
   if (utils.isFunction(options.$extends)) {
-    Class.__proto__ = options.$extends;
+    utils.setPropertyOf(Class, options.$extends);
   }
   if (!options.$extends.$extend) {
     utils.copy(ClassFactory, Class);
