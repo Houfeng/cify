@@ -1,6 +1,6 @@
 {
   "name": "cify",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "一个面向对象辅助模块",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,6 @@
     "ntils": "^2.0.9"
   },
   "devDependencies": {
-    "ntils": "^2.0.13"
+    "ntils": "^2.0.14"
   }
 }
