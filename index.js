@@ -17,9 +17,12 @@ function ClassFactory(options) {
         if (this._super_called_) return this._super_ret_;
         this._super_called_ = true;
         if (utils.isFunction(options.$extends)) {
-          var proto = utils.getPrototypeOf(this);
           this._super_ret_ = options.$extends.apply(this, arguments);
-          utils.setPrototypeOf(proto, this._super_ret_);
+          //这几行确保可继承于数组
+          if (this._super_ret_) {
+            var proto = utils.getPrototypeOf(this);
+            utils.setPrototypeOf(proto, this._super_ret_);
+          }
         } else {
           this._super_ret_ = options.$extends;
         }

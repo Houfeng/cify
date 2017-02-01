@@ -33,4 +33,4 @@ var a = new A(5, 4);
 var b = new B(3);
 var c = new C(6);
 
-console.log(b.getName());
+console.log(a.length);
