@@ -13,7 +13,7 @@ function ClassFactory(options) {
   var Class = function () {
     //处理 super
     if (!this.$super) {
-      utils.defineFreezeProp(this, '$super', function () {
+      utils.final(this, '$super', function () {
         if (this._super_called_) return this._super_ret_;
         this._super_called_ = true;
         if (utils.isFunction(options.$extends)) {
@@ -49,7 +49,7 @@ function ClassFactory(options) {
   //处理 prototype
   Class.prototype = utils.create(superPrototype);
   utils.copy(options, Class.prototype);
-  utils.defineFreezeProp(Class.prototype, '$class', Class);
+  utils.final(Class.prototype, '$class', Class);
   //处理静态成员
   utils.copy(options.$static, Class);
   if (utils.isFunction(options.$extends)) {
@@ -58,7 +58,7 @@ function ClassFactory(options) {
   if (!options.$extends.$extend) {
     utils.copy(ClassFactory, Class);
   }
-  utils.defineFreezeProp(Class, '$super', options.$extends);
+  utils.final(Class, '$super', options.$extends);
   //--
   return Class;
 }

@@ -1,6 +1,6 @@
 {
   "name": "cify",
-  "version": "2.1.11",
+  "version": "2.1.12",
   "description": "一个面向对象辅助模块",
   "main": "index.js",
   "scripts": {
@@ -14,9 +14,7 @@
   "author": "Houfeng",
   "license": "MIT",
   "dependencies": {
-    "ntils": "^2.0.9"
+    "ntils": "^3.1.9"
   },
-  "devDependencies": {
-    "ntils": "^2.0.14"
-  }
+  "devDependencies": {}
 }
